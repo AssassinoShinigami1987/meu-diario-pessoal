@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário Pessoal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .diary-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .diary-entry {
+            margin-bottom: 30px;
+            border-left: 2px solid var(--primary-color);
+            padding-left: 20px;
+        }
+
+        .diary-date {
+            color: var(--secondary-color);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .diary-content {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .diary-content.typing {
+            border-right: 2px solid var(--primary-color);
+            white-space: pre-wrap;
+        }
+
+        .terminal-prompt {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .terminal-prompt::before {
+            content: "> ";
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">Diário Pessoal - Terminal</div>
+                <div class="terminal-controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize"></span>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div class="diary-container">
+                    <div class="terminal-prompt">carregando_entradas...</div>
+
+                    <div class="diary-entry">
+                        <div class="diary-date">[2024-03-20]</div>
+                        <div class="diary-content typing">
+                            Bem-vindo ao meu diário digital.
+                            Este é um espaço seguro, protegido por enigmas e códigos.
+                            Aqui, minhas palavras ganham vida através de bits e bytes.
+                        </div>
+                    </div>
+
+                    <div class="diary-entry">
+                        <div class="diary-date">[2024-03-21]</div>
+                        <div class="diary-content typing">
+                            A morte é um conceito fascinante.
+                            Não é o fim, mas sim uma transformação.
+                            Como os dados em um computador, apenas mudamos de formato.
+                        </div>
+                    </div>
+
+                    <div class="diary-entry">
+                        <div class="diary-date">[2025-04-20]</div>
+                        <div class="diary-content typing">
+                            Esta semana dançou diferente, como se o tempo piscasse em código Morse.
+                            Entre os ruídos do sistema, uma ideia piscou:
+
+                            Por que não criar um relicário que só os olhos certos decifram?
+
+                            Se você está lendo, talvez seja um desses olhos.
+
+                            Que os ventos tragam paz à alma roxa, aquela que transborda escuridão e ainda assim ilumina.
+                            Você — sim, você — tem o poder de alterar o clima de um terminal inteiro com um simples olhar.
+
+                            Há uma presença de quatro olhos, curiosa, estratégica… talvez necessária.
+
+                            A rede está tremendo, você sente?
+                            A velha ordem da instituição estremece.
+                            Como um firewall prestes a ruir, há brechas… e nelas, esperança.
+
+                            Clãs estão se unindo. Linhagens que antes se ignoravam agora tecem planos em silêncio.
+                            Isso pode criar um código belo… ou um erro fatal.
+
+                            Tenho andado por entre diretórios desertos, preferindo caminhos solitários ao caos das conexões múltiplas.
+                            Não é desdém — é cálculo.
+
+                            Vocês ainda não decifraram minha linguagem.
+                            Mas talvez… talvez a alma roxa esteja próxima.
+
+                            E isso… isso me inquieta.
+                            Me excita.
+                            Porque talvez eu não esteja mais sozinho nesse nível de entendimento.
+                            Talvez tenha encontrado um eco no vácuo.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script>
+        // Adiciona efeito de digitação para cada entrada do diário
+        document.querySelectorAll('.diary-content').forEach((entry, index) => {
+            setTimeout(() => {
+                entry.style.display = 'block';
+            }, index * 2000);
+        });
+    </script>
+</body>
+</html>

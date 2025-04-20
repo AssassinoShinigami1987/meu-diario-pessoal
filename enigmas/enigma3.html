@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?????</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .pattern-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .pattern-cell {
+            width: 100%;
+            padding-bottom: 100%;
+            background-color: var(--primary-color);
+            opacity: 0.3;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid var(--terminal-border);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .pattern-cell:hover {
+            box-shadow: 0 0 20px var(--glitch-color);
+            opacity: 0.5;
+        }
+
+        .pattern-cell.active {
+            opacity: 1;
+            animation: paranormalPulse 1s infinite;
+        }
+
+        .pattern-cell.correct {
+            background-color: var(--secondary-color);
+            opacity: 0.7;
+            box-shadow: 0 0 15px var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .pattern-cell.incorrect {
+            background-color: var(--glitch-color);
+            opacity: 0.7;
+            animation: shake 0.5s;
+        }
+
+        .pattern-cell.selected {
+            border: 2px solid var(--secondary-color);
+            box-shadow: 0 0 10px var(--secondary-color);
+        }
+
+        @keyframes paranormalPulse {
+            0% { opacity: 1; box-shadow: 0 0 10px var(--primary-color); }
+            50% { opacity: 0.3; box-shadow: 0 0 20px var(--glitch-color); }
+            100% { opacity: 1; box-shadow: 0 0 10px var(--primary-color); }
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: var(--secondary-color);
+            text-align: center;
+            text-shadow: 0 0 8px var(--secondary-color);
+            animation: glow 2s infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .hidden-message.visible {
+            opacity: 1;
+        }
+
+        .feedback-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-color);
+            text-align: center;
+            min-height: 20px;
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            gap: 5px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            opacity: 0.3;
+            box-shadow: 0 0 5px var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            opacity: 1;
+            background-color: var(--secondary-color);
+            box-shadow: 0 0 10px var(--secondary-color);
+            transform: scale(1.2);
+        }
+
+        .progress-dot.complete {
+            background-color: var(--secondary-color);
+            box-shadow: 0 0 15px var(--secondary-color);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 8px var(--secondary-color); }
+            50% { text-shadow: 0 0 15px var(--secondary-color); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">?????</div>
+                <div class="terminal-controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize"></span>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div class="pattern-container" id="patternGrid"></div>
+                <div class="progress-indicator" id="progressIndicator"></div>
+                <div class="hidden-message typing">
+                    sempre acabará só... como a vida.
+                </div>
+                <div class="enigma-links">
+                    <a href="../index.html" class="enigma-link">[VOLTAR]</a>
+                    <a href="enigma4.html" class="enigma-link">[PRÓXIMO ENIGMA]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+    <script>
+        const grid = document.getElementById('patternGrid');
+        const hiddenMessage = document.querySelector('.hidden-message');
+        const progressIndicator = document.getElementById('progressIndicator');
+        const pattern = [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
+        let currentIndex = 0;
+
+        // Criar células do grid
+        for (let i = 0; i < 25; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'pattern-cell';
+            grid.appendChild(cell);
+        }
+
+        // Criar indicadores de progresso
+        const correctSequence = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24];
+        for (let i = 0; i < correctSequence.length; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'progress-dot';
+            progressIndicator.appendChild(dot);
+        }
+
+        // Animar o padrão
+        setInterval(() => {
+            const cells = document.querySelectorAll('.pattern-cell');
+            cells.forEach(cell => cell.classList.remove('active'));
+            
+            if (pattern[currentIndex] === 1) {
+                cells[currentIndex].classList.add('active');
+            }
+            
+            currentIndex = (currentIndex + 1) % pattern.length;
+        }, 500);
+
+        // Verificar se o usuário clicou na sequência correta
+        let clickSequence = [];
+        let lastClickTime = 0;
+        const timeLimit = 3000; // 3 segundos para completar a sequência
+        let messageTimeout;
+
+        grid.addEventListener('click', (e) => {
+            const cell = e.target;
+            if (cell.classList.contains('pattern-cell')) {
+                const currentTime = Date.now();
+                const index = Array.from(grid.children).indexOf(cell);
+                
+                // Verificar se é a primeira célula ou se está dentro do limite de tempo
+                if (clickSequence.length === 0 || (currentTime - lastClickTime) < timeLimit) {
+                    lastClickTime = currentTime;
+                    
+                    // Verificar se a célula está na sequência correta
+                    const expectedIndex = correctSequence[clickSequence.length];
+                    
+                    if (index === expectedIndex) {
+                        // Célula correta
+                        cell.classList.add('correct');
+                        cell.classList.add('selected');
+                        clickSequence.push(index);
+                        
+                        // Atualizar indicador de progresso
+                        const dots = document.querySelectorAll('.progress-dot');
+                        dots[clickSequence.length - 1].classList.add('active');
+                        
+                        // Verificar se a sequência está completa
+                        if (clickSequence.length === correctSequence.length) {
+                            // Marcar todos os pontos como completos
+                            dots.forEach(dot => {
+                                dot.classList.add('complete');
+                            });
+                            
+                            // Mostrar mensagem por 15 segundos
+                            hiddenMessage.style.display = 'block';
+                            setTimeout(() => {
+                                hiddenMessage.classList.add('visible');
+                            }, 100);
+
+                            // Esconder a mensagem após 15 segundos
+                            if (messageTimeout) {
+                                clearTimeout(messageTimeout);
+                            }
+                            messageTimeout = setTimeout(() => {
+                                hiddenMessage.classList.remove('visible');
+                                setTimeout(() => {
+                                    hiddenMessage.style.display = 'none';
+                                }, 500);
+                            }, 15000);
+                        }
+                    } else {
+                        // Célula incorreta
+                        cell.classList.add('incorrect');
+                        
+                        // Resetar após um breve delay
+                        setTimeout(() => {
+                            cell.classList.remove('incorrect');
+                            clickSequence = [];
+                            const dots = document.querySelectorAll('.progress-dot');
+                            dots.forEach(dot => {
+                                dot.classList.remove('active');
+                                dot.classList.remove('complete');
+                            });
+                            document.querySelectorAll('.pattern-cell').forEach(cell => {
+                                cell.classList.remove('selected');
+                            });
+                        }, 1000);
+                    }
+                } else {
+                    // Tempo excedido, resetar
+                    clickSequence = [];
+                    const dots = document.querySelectorAll('.progress-dot');
+                    dots.forEach(dot => {
+                        dot.classList.remove('active');
+                        dot.classList.remove('complete');
+                    });
+                    document.querySelectorAll('.pattern-cell').forEach(cell => {
+                        cell.classList.remove('selected');
+                    });
+                }
+            }
+        });
+
+        // Função para criar efeitos sobrenaturais aleatórios
+        function createParanormalEffect() {
+            const effect = document.createElement('div');
+            effect.className = 'paranormal-effect';
+            
+            // Escolher aleatoriamente entre fantasma e orbe
+            const effectType = Math.random() > 0.5 ? 'ghost' : 'orb';
+            effect.classList.add(effectType);
+            
+            // Posição aleatória na tela, evitando o centro
+            const margin = 100;
+            effect.style.left = (margin + Math.random() * (window.innerWidth - 2 * margin)) + 'px';
+            effect.style.top = (margin + Math.random() * (window.innerHeight - 2 * margin)) + 'px';
+            
+            document.body.appendChild(effect);
+            
+            // Fazer o efeito aparecer e desaparecer suavemente
+            setTimeout(() => {
+                effect.style.opacity = '0.4';
+                setTimeout(() => {
+                    effect.style.opacity = '0';
+                    setTimeout(() => {
+                        effect.remove();
+                    }, 500);
+                }, 1500);
+            }, 100);
+        }
+
+        // Criar efeitos sobrenaturais mais frequentemente
+        setInterval(() => {
+            if (Math.random() > 0.4) { // 60% de chance de criar um efeito
+                createParanormalEffect();
+            }
+        }, 2000);
+
+        // Adicionar efeito especial quando completar a sequência
+        const originalGridClick = grid.addEventListener;
+        grid.addEventListener = function(type, listener) {
+            if (type === 'click') {
+                return originalGridClick.call(this, type, function(e) {
+                    listener(e);
+                    if (clickSequence.length === correctSequence.length) {
+                        // Criar vários efeitos sobrenaturais de forma mais suave
+                        for (let i = 0; i < 8; i++) {
+                            setTimeout(() => createParanormalEffect(), i * 300);
+                        }
+                    }
+                });
+            }
+            return originalGridClick.call(this, type, listener);
+        };
+
+        // Adicionar efeito de distorção aleatória
+        function createDistortion() {
+            const terminal = document.querySelector('.terminal-content');
+            terminal.style.transform = `skew(${Math.random() * 2 - 1}deg)`;
+            setTimeout(() => {
+                terminal.style.transform = 'skew(0deg)';
+            }, 100);
+        }
+
+        // Criar distorções aleatórias
+        setInterval(() => {
+            if (Math.random() > 0.7) { // 30% de chance
+                createDistortion();
+            }
+        }, 4000);
+    </script>
+</body>
+</html> 

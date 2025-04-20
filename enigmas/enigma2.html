@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?????</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .cipher-container {
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .cipher-text {
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+            margin: 10px 0;
+            min-height: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .cipher-text.correct {
+            color: var(--secondary-color);
+            text-shadow: 0 0 10px var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .cipher-input {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px;
+            font-family: 'Fira Code', monospace;
+            margin: 10px 0;
+            width: 200px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .cipher-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .cipher-input.correct {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px var(--secondary-color);
+        }
+
+        .decoded-text {
+            margin: 15px 0;
+            min-height: 24px;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .decoded-text.correct {
+            color: var(--secondary-color);
+            text-shadow: 0 0 10px var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: var(--secondary-color);
+            text-shadow: 0 0 8px var(--secondary-color);
+            animation: glow 2s infinite;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .hidden-message.visible {
+            opacity: 1;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 8px var(--secondary-color); }
+            50% { text-shadow: 0 0 15px var(--secondary-color); }
+        }
+
+        .success {
+            color: var(--secondary-color);
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .visual-feedback {
+            width: 100%;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 10px 0;
+            transition: all 0.3s ease;
+            opacity: 0.3;
+        }
+
+        .visual-feedback.correct {
+            background: var(--secondary-color);
+            opacity: 1;
+            box-shadow: 0 0 10px var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">?????</div>
+                <div class="terminal-controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize"></span>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div class="cipher-container">
+                    <div class="cipher-text glitch-text">R UHGH DGR G H DOPDV</div>
+                    <div class="visual-feedback"></div>
+                    <input type="number" class="cipher-input" placeholder="?" min="1" max="25">
+                    <div class="decoded-text"></div>
+                    <div class="hidden-message typing">
+                        rodeado de almas... mas a morte não está na beleza.
+                    </div>
+                </div>
+                <div class="enigma-links">
+                    <a href="../index.html" class="enigma-link">[VOLTAR]</a>
+                    <a href="enigma3.html" class="enigma-link">[PRÓXIMO ENIGMA]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+    <script>
+        const cipherInput = document.querySelector('.cipher-input');
+        const hiddenMessage = document.querySelector('.hidden-message');
+        const decodedText = document.querySelector('.decoded-text');
+        const visualFeedback = document.querySelector('.visual-feedback');
+        const cipherText = document.querySelector('.cipher-text');
+        
+        const originalMessage = "RODEADO DE ALMAS";
+        const encryptedMessage = "R UHGH DGR G H DOPDV";
+
+        function decodeCaesar(text, shift) {
+            return text.split('').map(char => {
+                if (char === ' ') return ' ';
+                const code = char.charCodeAt(0);
+                if (code >= 65 && code <= 90) {
+                    return String.fromCharCode(((code - 65 - shift + 26) % 26) + 65);
+                }
+                return char;
+            }).join('');
+        }
+
+        cipherInput.addEventListener('input', function() {
+            const shift = parseInt(this.value);
+            if (shift >= 1 && shift <= 25) {
+                const decoded = decodeCaesar(encryptedMessage, shift);
+                decodedText.textContent = decoded;
+                
+                if (decoded === originalMessage) {
+                    cipherInput.classList.add('correct');
+                    cipherText.classList.add('correct');
+                    visualFeedback.classList.add('correct');
+                    decodedText.classList.add('correct');
+                    hiddenMessage.style.display = 'block';
+                    setTimeout(() => {
+                        hiddenMessage.classList.add('visible');
+                    }, 100);
+                } else {
+                    cipherInput.classList.remove('correct');
+                    cipherText.classList.remove('correct');
+                    visualFeedback.classList.remove('correct');
+                    decodedText.classList.remove('correct');
+                    hiddenMessage.classList.remove('visible');
+                    hiddenMessage.style.display = 'none';
+                }
+            } else {
+                decodedText.textContent = '';
+                cipherInput.classList.remove('correct');
+                cipherText.classList.remove('correct');
+                visualFeedback.classList.remove('correct');
+                decodedText.classList.remove('correct');
+                hiddenMessage.classList.remove('visible');
+                hiddenMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 

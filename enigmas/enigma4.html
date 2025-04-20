@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?????</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .password-container {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .password-input {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px;
+            font-family: 'Fira Code', monospace;
+            width: 100%;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .password-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .error-message {
+            color: var(--glitch-color);
+            display: none;
+            margin: 10px 0;
+            animation: glitch 0.3s infinite;
+        }
+
+        .success-message {
+            color: var(--primary-color);
+            display: none;
+            margin: 10px 0;
+            text-shadow: 0 0 8px var(--primary-color);
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 8px var(--primary-color); }
+            50% { text-shadow: 0 0 15px var(--primary-color); }
+        }
+
+        .ascii-skull {
+            font-family: 'Fira Code', monospace;
+            white-space: pre;
+            font-size: 12px;
+            margin: 20px 0;
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">?????</div>
+                <div class="terminal-controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize"></span>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div class="ascii-skull">
+                    ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗
+                    ██╔════╝██║   ██║██╔════╝╚══██╔══╝██╔════╝████╗ ████║
+                    ███████╗██║   ██║█████╗     ██║   █████╗  ██╔████╔██║
+                    ╚════██║██║   ██║██╔══╝     ██║   ██╔══╝  ██║╚██╔╝██║
+                    ███████║╚██████╔╝███████╗   ██║   ██║     ██║ ╚═╝ ██║
+                    ╚══════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝     ╚═╝     ╚═╝
+                </div>
+                <div class="password-container">
+                    <div class="glitch-text">Digite a senha final:</div>
+                    <input type="text" class="password-input" id="passwordInput" placeholder="Senha...">
+                    <div class="error-message">Senha incorreta. Tente novamente.</div>
+                    <div class="success-message typing">Acesso concedido. Redirecionando...</div>
+                </div>
+                <div class="enigma-links">
+                    <a href="../index.html" class="enigma-link">[VOLTAR]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+    <script>
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.querySelector('.error-message');
+        const successMessage = document.querySelector('.success-message');
+        const correctPassword = 'o ceifador mesmo rodeado de almas, sempre acabará só';
+
+        passwordInput.addEventListener('input', function() {
+            if (this.value.toLowerCase() === correctPassword) {
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = '../diario.html';
+                }, 2000);
+            } else {
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html> 

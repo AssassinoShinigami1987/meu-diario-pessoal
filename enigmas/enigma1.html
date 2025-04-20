@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?????</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .binary-container {
+            font-family: 'Fira Code', monospace;
+            font-size: 12px;
+            line-height: 1;
+            white-space: pre;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .binary-text {
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .binary-text:hover {
+            color: var(--glitch-color);
+            text-shadow: 0 0 5px var(--glitch-color);
+            cursor: pointer;
+        }
+
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            font-size: 16px;
+            color: var(--secondary-color);
+            text-shadow: 0 0 8px var(--secondary-color);
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 8px var(--secondary-color); }
+            50% { text-shadow: 0 0 15px var(--secondary-color); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-title">?????</div>
+                <div class="terminal-controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize"></span>
+                </div>
+            </div>
+            <div class="terminal-content">
+                <div class="binary-container">
+                    <pre class="binary-text">
+01001111 00100000 01000011 01000101 01001001 01000110 01000001 01000100 01001111 01010010 00100000 01001101 01000101 01010011 01001101 01001111
+01001111 00100000 01000011 01000101 01001001 01000110 01000001 01000100 01001111 01010010 00100000 01001101 01000101 01010011 01001101 01001111
+01001111 00100000 01000011 01000101 01001001 01000110 01000001 01000100 01001111 01010010 00100000 01001101 01000101 01010011 01001101 01001111
+01001111 00100000 01000011 01000101 01001001 01000110 01000001 01000100 01001111 01010010 00100000 01001101 01000101 01010011 01001101 01001111
+01001111 00100000 01000011 01000101 01001001 01000110 01000001 01000100 01001111 01010010 00100000 01001101 01000101 01010011 01001101 01001111
+                    </pre>
+                </div>
+                <div class="enigma-links">
+                    <a href="../index.html" class="enigma-link">[VOLTAR]</a>
+                    <a href="enigma2.html" class="enigma-link">[PRÓXIMO ENIGMA]</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/main.js"></script>
+    <script>
+        document.querySelector('.binary-text').addEventListener('click', function() {
+            // Removido o código que mostrava a mensagem oculta
+        });
+    </script>
+</body>
+</html> 
