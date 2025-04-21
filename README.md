@@ -31,7 +31,7 @@ Um diário pessoal com estética hacker, protegido por enigmas visuais e código
 
 1. Acesse `index.html` para começar
 2. Resolva os 4 enigmas em sequência
-3. Na página final, insira a senha "o ceifador morre só"
+3. Na página final, insira a senha que descobriu com os enigmas
 4. Acesse o diário pessoal
 
 ## Personalização
